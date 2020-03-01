@@ -1,4 +1,23 @@
+html,body {
+  margin: 0;
+  height: 100%;
+}
+body {
+  padding: 20px;
+}
 #app-dark {
   height: 20px;
   background: #1F1F1F;
+}
+
+#app-left {
+  float: left;
+  width: 100px;
+  height: 80%;
+}
+
+#app-right {
+  float: right;
+  width: 100px;
+  height: 80%;
 }

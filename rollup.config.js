@@ -15,9 +15,9 @@ var banner =
 `
 
 const config = ['cjs', 'es'].map(format => ({
-  name,
   input: './src/index.ts',
   output: {
+    name,
     file: `dist/${format === 'es' ? 'esm' : 'lib'}/index.js`,
     format,
     banner
