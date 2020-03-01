@@ -65,7 +65,7 @@ export default class TimeLiner {
   draw (options?: IOptions) {
     if (options) this.setOption(options)
 
-    this.steps = Math.round(this.width / 10)
+    this.steps = Math.round(this.width / this.options.gap)
     this.ctx.clearRect(0, 0, this.width, this.height)
     // 绘制长线
     this.drawLine(0, this.height, this.width, this.height)
@@ -96,7 +96,7 @@ export default class TimeLiner {
     const { lineHeight, gapHeight, gap, interval, formatMarkText } = this.options
     let isGap: boolean = false
     let isGapText: boolean = false
-    let [x, y] = [0, 0]
+    let [x, y, textY] = [0, 0, 0]
     let text: string | number;
     const val = interval || 10
     const g = gap || 10
@@ -106,6 +106,7 @@ export default class TimeLiner {
       isGapText = isGap || i === 0
       x = g * i + 0.5
       y = this.height - (isGap ? gapHeight || 20 : lineHeight || 10) + 0.5
+      textY = this.height - (gapHeight || 20) + 0.5 - 5
       // + 0.5 解决 1px 模糊
       this.drawLine(
         x,
@@ -119,7 +120,7 @@ export default class TimeLiner {
       isGapText && this.drawText(
         text,
         x,
-        y - 5
+        textY
       )
     }
   }

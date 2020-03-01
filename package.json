@@ -11,6 +11,7 @@
     "dev:server": "parcel example/index.html",
     "build": "npm version patch && rollup -c",
     "deploy": "parcel build example/index.html --out-dir canvas-timeliner --public-url /canvas-timeliner/ && sh deploy.sh",
+    "commit": "npx git-cz",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -20,12 +21,25 @@
   "author": "tomieric<tomieric@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@commitlint/prompt-cli": "^8.3.4",
+    "commitlint-config-cz": "^0.13.0",
     "concurrently": "^5.1.0",
+    "cz-conventional-changelog": "^3.1.0",
     "parcel": "^1.12.4",
     "rollup": "^1.32.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-typescript": "^1.0.1",
     "tslib": "^1.11.1",
     "typescript": "^3.8.3"
+  },
+  "husky": {
+    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }
