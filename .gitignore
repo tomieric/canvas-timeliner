@@ -1,0 +1,8 @@
+*.lock
+node_modules
+.vscode
+package-lock.json
+yarn.lock
+dist/
+canvas-timeliner/
+.cache/

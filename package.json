@@ -1,0 +1,31 @@
+{
+  "name": "@tomieric/canvas-timeliner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/lib/index.js",
+  "module": "dist/esm/index.js",
+  "typings": "src/index.ts",
+  "scripts": {
+    "dev": "concurrently \"npm:dev:*\"",
+    "dev:build": "rollup -c -w",
+    "dev:server": "parcel example/index.html",
+    "build": "npm version patch && rollup -c",
+    "deploy": "parcel build example/index.html --out-dir canvas-timeliner --public-url /canvas-timeliner/ && sh deploy.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "timeliner",
+    "timeline"
+  ],
+  "author": "tomieric<tomieric@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "parcel": "^1.12.4",
+    "rollup": "^1.32.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-typescript": "^1.0.1",
+    "tslib": "^1.11.1",
+    "typescript": "^3.8.3"
+  }
+}
