@@ -25,13 +25,15 @@ const timeliner = new TimeLiner({
 
 const timeLiner2 = new TimeLiner({
   container: darkApp,
-  gap,
+  gap: 24,
   position: 'bottom',
+  textAlign: 'center',
   lineHeight: 4,
   gapHeight: 6,
+  interval: 10,
   lineColor: '#999999', // rgb(51, 51, 51)
   gapColor: '#eeeeee', // rgb(102, 102, 102)
-  textStyle: 'rgb(210, 210, 210)',
+  textStyle: '#EEEEEE',
   formatMarkText (frame) {
     const m = frame >= gap ? Math.floor(frame / gap) : 0
     const f = frame % 24
@@ -62,17 +64,19 @@ const rightTimeLine = new TimeLiner({
 })
 
 points.addEventListener('change', e => {
-  console.log(e.target.value)
+  const val = interval * e.target.value
+  console.log(gap, val, gap * val)
   timeliner.draw({
-    interval: interval * e.target.value
+    interval: val
   })
   timeLiner2.draw({
-    interval: interval * e.target.value
+    interval: val,
+    gap: Math.ceil(gap * (val / 10))
   })
   leftTimeLine.draw({
-    interval: interval * e.target.value
+    interval: val
   })
   rightTimeLine.draw({
-    interval: interval * e.target.value
+    interval: val
   })
 })
