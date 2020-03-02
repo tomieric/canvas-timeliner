@@ -1,6 +1,6 @@
 {
   "name": "@tomieric/canvas-timeliner",
-  "version": "1.0.2",
+  "version": "1.1.0-alpha.0",
   "description": "",
   "main": "dist/lib/index.js",
   "module": "dist/esm/index.js",
@@ -9,11 +9,12 @@
     "dev": "concurrently \"npm:dev:*\"",
     "dev:build": "rollup -c -w",
     "dev:server": "parcel example/index.html",
-    "build": "npm version patch && rollup -c",
+    "build": "rollup -c",
     "deploy": "parcel build example/index.html --out-dir canvas-timeliner --public-url /canvas-timeliner/ && sh deploy.sh",
     "commit": "npx git-cz",
     "release": "standard-version",
     "postrelase": "git push --follow-tags origin master && npm publish",
+    "alpha": "npm run release -- --prerelease alpha",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
