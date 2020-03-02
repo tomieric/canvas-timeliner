@@ -10,6 +10,7 @@
     "dev:build": "rollup -c -w",
     "dev:server": "parcel example/index.html",
     "build": "rollup -c",
+    "predeploy": "rm -rf ./canvas-timeliner",
     "deploy": "parcel build example/index.html --out-dir canvas-timeliner --public-url /canvas-timeliner/ && sh deploy.sh",
     "commit": "npx git-cz",
     "release": "standard-version",
