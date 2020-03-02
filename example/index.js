@@ -25,13 +25,14 @@ const timeliner = new TimeLiner({
 
 const timeLiner2 = new TimeLiner({
   container: darkApp,
-  gap,
+  gap: 100,
   position: 'bottom',
   lineHeight: 4,
   gapHeight: 6,
+  interval: 10,
   lineColor: '#999999', // rgb(51, 51, 51)
   gapColor: '#eeeeee', // rgb(102, 102, 102)
-  textStyle: 'rgb(210, 210, 210)',
+  textStyle: '#EEEEEE',
   formatMarkText (frame) {
     const m = frame >= gap ? Math.floor(frame / gap) : 0
     const f = frame % 24

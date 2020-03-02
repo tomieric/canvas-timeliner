@@ -1,9 +1,11 @@
 export interface IOptions {
   container: HTMLElement; // 容器
   position: string; // 位置
-  textPos: string; // 刻度位置
+  textPos: number; // 刻度位置
   textAlign: string; // 文字对齐
   gap: number;
+  width: number;
+  height: number;
   lineOffset: number;
   gapHeight: number;
   gapColor: number;
@@ -14,6 +16,19 @@ export interface IOptions {
   textSize: string;
   textStyle: string;
   formatMarkText: (mark: number | string) => string;
+}
+
+const DEFAULT_OPTIONS: object = {
+  height: 100,
+  textSize: 10,
+  interval: 10,
+  gap: 10,
+  textPos: 5,
+  gapHeight: 20,
+  lineHeight: 10,
+  lineWidth: 1,
+  lineColor: 'rgb(0, 0, 0)',
+  textStyle: '#000000'
 }
 
 export default class TimeLiner {
@@ -37,12 +52,12 @@ export default class TimeLiner {
     this.canvas = canvas
     this.container = container
     this.ctx = canvas.getContext('2d')
-    this.options = options
+    this.options = Object.assign({}, DEFAULT_OPTIONS, options)
 
     this.setRect()
     this.render()
     this.draw()
-    this.resizeObserve()
+    // this.resizeObserve()
   }
 
   render (dom?: HTMLElement) {
@@ -55,23 +70,24 @@ export default class TimeLiner {
   }
 
   setRect (isResize?: boolean) {
-    const { canvas, container } = this
+    const { canvas, container, options } = this
+    const { width, height } = options
     const boundRect: ClientRect = container.getBoundingClientRect()
 
-    ;(canvas as any).width = this.width = boundRect.width
-    if (!isResize) (canvas as any).height = this.height = boundRect.height || 100
+    ;(canvas as any).width = this.width = boundRect.width || width
+    if (!isResize) (canvas as any).height = this.height = boundRect.height || height
   }
 
   draw (options?: IOptions) {
     if (options) this.setOption(options)
     let total = this.width
-    const { position } = this.options
+    const { position, interval } = this.options
 
     if (/left|right/.test(position)) {
       total = this.height
     }
 
-    this.steps = Math.round(total / this.options.gap)
+    this.steps = Math.round(total / interval)
     this.ctx.clearRect(0, 0, this.width, this.height)
     // 绘制长线
     this.drawBorderLine()
@@ -108,8 +124,8 @@ export default class TimeLiner {
     ctx.beginPath()
     ctx.moveTo(x, y)
     ctx.lineTo(endX, endY)
-    ctx.strokeStyle = lineColor || 'rgb(0, 0, 0)'
-    ctx.lineWidth = lineWidth || 1
+    ctx.strokeStyle = lineColor
+    ctx.lineWidth = lineWidth
     ctx.stroke()
   }
 
@@ -117,18 +133,16 @@ export default class TimeLiner {
     const { ctx, options } = this
     const { textStyle, textSize } = options
     ctx.fillText(text as string, x, y)
-    ctx.font = textSize || '10'
-    ctx.fillStyle = textStyle || '#000000'
+    ctx.font = textSize
+    ctx.fillStyle = textStyle
   }
 
   private drawMark () {
-    const { lineHeight, gapHeight, gap, interval, formatMarkText, position, textSize } = this.options
+    const { lineHeight, gapHeight, gap, interval, formatMarkText, position, textSize, textPos } = this.options
     let isGap: boolean = false
     let isGapText: boolean = false
     let text: string | number;
-    const val = interval || 10
-    const g = gap || 10
-    const fontSize = Number(textSize) || 10
+    const fontSize = Number(textSize)
 
     // + 0.5 解决 1px 模糊
     const getXY = (num: number) => {
@@ -137,30 +151,30 @@ export default class TimeLiner {
       switch (position) {
         case 'left':
             x = 0
-            x1 = (isGap ? gapHeight || 20 : lineHeight || 10) + 0.5
-            y = y1 = (isGap ? gapHeight || 20 : lineHeight || 10) * num + 0.5
-            textX = (isGap ? gapHeight || 20 : lineHeight || 10) + 5 + 0.5
+            x1 = (isGap ? gapHeight : lineHeight) + 0.5
+            y = y1 = (isGap ? gapHeight : lineHeight) * num + 0.5
+            textX = (isGap ? gapHeight : lineHeight) + textPos + 0.5
             textY = y + fontSize / 2
           break
         case 'right':
-            x = this.width - (isGap ? gapHeight || 20 : lineHeight || 10) + 0.5
+            x = this.width - (isGap ? gapHeight : lineHeight) + 0.5
             x1 = this.width
-            y = y1 = (isGap ? gapHeight || 20 : lineHeight || 10) * num + 0.5
+            y = y1 = (isGap ? gapHeight : lineHeight) * num + 0.5
           break
         case 'bottom':
-            x = x1 = g * num + 0.5
-            y = this.height - (isGap ? gapHeight || 20 : lineHeight || 10) + 0.5
+            x = x1 = interval * num + 0.5
+            y = this.height - (isGap ? gapHeight : lineHeight) + 0.5
             y1 = this.height
             textX = x
-            textY = this.height - (gapHeight || 20) + 0.5 - 5
+            textY = this.height - (gapHeight) + 0.5 - textPos
           break;
         case 'top':
         default:
-            x = x1 = g * num + 0.5
+            x = x1 = interval * num + 0.5
             y = 0
-            y1 = (isGap ? gapHeight || 20 : lineHeight || 10) + 0.5
+            y1 = (isGap ? gapHeight : lineHeight) + 0.5
             textX = x
-            textY = (gapHeight || 20) + 0.5 + fontSize
+            textY = gapHeight + 0.5 + fontSize + textPos
           break;
       }
 
@@ -168,7 +182,7 @@ export default class TimeLiner {
     }
 
     for (let i = 0; i < this.steps; i++) {
-      isGap = i > 0 ? !(i % val) : !1
+      isGap = i > 0 ? !(i % gap) : !1
       isGapText = isGap || i === 0
       const { x, y, x1, y1, textX, textY } = getXY(i)
       
