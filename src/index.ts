@@ -138,6 +138,7 @@ export default class TimeLiner {
     
     ctx.font = textSize
     ctx.fillStyle = textStyle
+    ctx.textBaseline = 'middle'
     ctx.fillText(text as string, x, y)
   }
 

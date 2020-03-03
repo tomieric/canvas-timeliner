@@ -28,7 +28,7 @@ const timeLiner2 = new TimeLiner({
   gap: 24,
   position: 'bottom',
   textAlign: 'center',
-  lineHeight: 4,
+  lineHeight: 6,
   gapHeight: 6,
   interval: 10,
   lineColor: '#999999', // rgb(51, 51, 51)
