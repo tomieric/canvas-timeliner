@@ -57,13 +57,12 @@ export default class TimeLiner {
     this.ctx = canvas.getContext('2d')
     this.options = Object.assign({}, DEFAULT_OPTIONS, options)
 
-    this.setRect()
+    this.init()
     this.render()
-    this.draw()
     if (autoSize) this.resizeObserve()
   }
 
-  render (dom?: HTMLElement) {
+  private init (dom?: HTMLElement) {
     const el = (dom || this.container)
     if (el) {
       el.appendChild(this.canvas)
@@ -72,17 +71,22 @@ export default class TimeLiner {
     }
   }
 
-  setRect (isResize?: boolean) {
+  render (options?: IOptions) {
+    if (options) this.setOption(options)
+    this.setRect()
+    this.draw()
+  }
+
+  private setRect (isResize?: boolean) {
     const { canvas, container, options } = this
     const { width, height } = options
     const boundRect: ClientRect = container.getBoundingClientRect()
 
-    ;(canvas as any).width = this.width = boundRect.width || width
-    if (!isResize) (canvas as any).height = this.height = boundRect.height || height
+    ;(canvas as any).width = this.width = width || boundRect.width
+    if (!isResize) (canvas as any).height = this.height = height || boundRect.height
   }
 
-  draw (options?: IOptions) {
-    if (options) this.setOption(options)
+  private draw () {
     let total = this.width
     const { position, interval } = this.options
 
@@ -92,13 +96,15 @@ export default class TimeLiner {
 
     this.steps = Math.round(total / interval)
     this.ctx.clearRect(0, 0, this.width, this.height)
+
     // 绘制长线
     this.drawBorderLine()
+    
     // 绘制刻线
     this.drawMark()
   }
 
-  drawBorderLine () {
+  private drawBorderLine () {
     const { position } = this.options
     let [x, y, x1, y1] = [0, 0, this.width, this.height]
     switch (position) {
@@ -121,7 +127,7 @@ export default class TimeLiner {
     this.drawLine(x, y, x1, y1)
   }
 
-  drawLine (x: number, y: number, endX: number, endY: number) {
+  private drawLine (x: number, y: number, endX: number, endY: number) {
     const ctx = this.ctx
     const { lineColor, lineWidth } = this.options
     ctx.beginPath()
@@ -132,7 +138,7 @@ export default class TimeLiner {
     ctx.stroke()
   }
 
-  drawText (text: string | number, x: number, y: number) {
+  private drawText (text: string | number, x: number, y: number) {
     const { ctx, options } = this
     const { textStyle, textSize } = options
     
@@ -191,13 +197,13 @@ export default class TimeLiner {
 
       return { x, y, x1, y1, textX, textY, text }
     }
-
+    
     for (let i = 0; i < this.steps; i++) {
       isGap = i > 0 ? !(i % gap) : !1
       isGapText = isGap || i === 0
       const { x, y, x1, y1, textX, textY, text } = getXY(i)
       this.drawLine(x, y, x1, y1)
-
+      
       isGapText && this.drawText(text, textX, textY)
     }
   }
