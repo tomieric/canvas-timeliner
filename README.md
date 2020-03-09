@@ -2,6 +2,21 @@
 
 ![Preview](./snapshot.jpg)
 
+## Install
+
+```
+yarn add @tomieric/canvas-timeliner
+```
+
+## Usage
+
+```
+import Ruler from '@tomieric/canvas-timeliner'
+
+const ruler = new Rule(options?)
+```
+
+
 ## Options
 
 ```
